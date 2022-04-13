@@ -1,4 +1,6 @@
 typedef struct capo{
-    char taglia;
+    unsigned short int taglia;
+    char* nome;
     double prezzo;
-};
+} Capo;
+
