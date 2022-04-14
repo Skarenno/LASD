@@ -4,13 +4,11 @@
 #endif
 
 
-
-Node* Read_List(FILE* file, Node* Head){
+Clothes_Node* Read_Clothes_List(FILE* file, Clothes_Node* Head){
     
     if(!Head->next){
-        Head->next = Initialize_Node(Head);
+        Head->next = Initialize_Clothes_Node(Head);
     }
-
     const char tok[2] = ":";
     char* str_token;
     char str_temp[STRLEN];
@@ -46,7 +44,7 @@ Node* Read_List(FILE* file, Node* Head){
         }
 
         fscanf(file, "%f", &Head->capo.prezzo);
-        Head->next = Read_List(file, Head->next);
+        Head->next = Read_Clothes_List(file, Head->next);
 
         if(Head->next)
             Head->next->prev = Head;

@@ -3,9 +3,6 @@
     #include STD_HEAD
 #endif
 
-
-
-
 int VerificaPassword(char* username, char* password){
 
     FILE* Utenti = fopen(U_PATH, "r+");
@@ -128,7 +125,7 @@ char* Accesso(char* username){
     return username;
 }
 
-void FirstScreen(char* user){
+char* FirstScreen(char* user){
     short unsigned int r_action;
 
     while(true){
@@ -140,6 +137,8 @@ void FirstScreen(char* user){
             strcpy(user, Accesso(user));
             if(user[0] != '\0')
                 break;
+            
+            return user;
         }
         if(r_action == 2)
             RegistraUtente();
@@ -163,4 +162,160 @@ float GetBalance(char* user){
     }
 
     return 0.0;
+}
+
+void PrintOptions(){
+    printf("\n0. Prelevare denaro\n");
+    printf("1. Aggiungere credito al conto virtuale\n");
+    printf("2. Effettuare un acquisto\n");
+    printf("3. Uscire\n");
+    printf("Selezionare un azione: ");
+}
+
+float Withdraw(float balance){
+    float op_balance;
+
+    if(balance <= 0){
+        printf("Non si dispone di credito. Si prega di selezionare un'altra opzione da quelle sopra: ");
+        return balance;
+    }
+
+    printf("Quanto si desidera prelevare? ");
+    scanf("%f", &op_balance);
+
+    if(op_balance > balance){
+        printf("\n\n--- Operazione non possibile. Riselezionare operazione: ");
+        return balance;
+    }
+
+    balance -= op_balance;
+    return balance;
+}
+
+float Load (float balance){
+    bool retry = true;
+    float op_balance = 0;
+    char req_c;
+
+    while(retry){
+        printf("Di quanto si vuole ricaricare il conto? ");
+        scanf("%f", &op_balance);
+
+        if(op_balance < 0){
+            printf("Importo non valido, si vuole riprovare? (y/n): ");
+            scanf(" %c", &req_c);
+                        
+            switch (req_c){
+                case 'y':
+                    break;
+
+                case 'n':
+                    retry = false;
+                    break;
+                 
+                default:
+                    printf("Selezione non valida.\n");
+            }
+        }
+        else{
+            balance += op_balance;
+            return balance;
+        }
+    }
+}
+
+unsigned short int  WelcomeScreen(User_Node* User){
+    unsigned short int req_action;
+    float old_balance;
+    bool exit = false;
+
+
+    printf("\n*************\n");
+    printf("*           *\n");
+    printf("*  WELCOME  *\n");
+    printf("*           *\n");
+    printf("*************\n");
+    printf("*************\n");
+
+    printf("---||Hai effettutato l'accesso come \"%s\", il tuo saldo equivale a %.2f||---\n\n", User->user.username, User->user.balance);
+    printf("Si possono eseguire le seguenti operazioni: ");
+    PrintOptions();
+
+
+    while(!exit){
+        scanf("%hu", &req_action);
+
+        switch(req_action){
+            // PRELEVARE
+            case 0:
+                old_balance = User->user.balance;
+                User->user.balance = Withdraw(User->user.balance);
+                
+                if(old_balance != User->user.balance){
+                    printf("\n\n--- OPERAZIONE ESEGUITA CON SUCCESSO. NUOVO SALDO ----> %.2f ---\n", User->user.balance);
+                    printf("Che altra operazione si vuole effettuare? ");
+                    PrintOptions();
+                    break;
+                }
+                
+                PrintOptions();
+                break;
+
+            // AGGIUNGERE CREDITO
+            case 1:
+                User->user.balance = Load(User->user.balance);
+                printf("\n\n--- OPERAZIONE ESEGUITA CON SUCCESSO. NUOVO CREDITO ----> %.2f\n", User->user.balance);
+                printf("Che altra operazione si vuole effettuare? ");
+                PrintOptions();
+                break;
+
+            // ACQUISTARE
+            case 2:
+                return 2;
+
+            // USCIRE
+
+            case 3:
+                return 3;
+
+            // OPZIONE NON VALIDA
+            
+            default:
+                printf("--- Opzione non valida. Si prega di riprovare ---\n");
+                PrintOptions();
+                break;
+        }           
+
+    }
+}
+
+User_Node* Read_User_List (FILE* file, User_Node* Head){
+    if(!Head->next)
+        Head->next = Initialize_User_Node(Head);
+
+    if(!feof(file)){
+        fscanf(file, "%s %s %f", Head->user.username, Head->user.password, &Head->user.balance);
+        Head->next = Read_User_List(file, Head->next);
+    }
+    else{
+        free(Head);
+        return NULL;
+    }
+    
+    return Head;   
+}
+
+FILE* Rewrite_User_File(User_Node* Head){
+    User_Node* Cursor = Initialize_User_Node(Cursor);
+    Cursor = Head;
+
+    FILE* file = fopen(U_PATH, "w+");
+
+    while(Cursor){
+    fprintf(file, "%s %s %.2f\n", Cursor->user.username, Cursor->user.password, Cursor->user.balance);
+    Cursor = Cursor->next;
+    }
+
+    fseek(file, 0, SEEK_SET);
+    return file;
 }
