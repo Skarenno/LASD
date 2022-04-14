@@ -1,8 +1,9 @@
 #ifndef STD_HEAD
     #define STD_HEAD "standard_header.h"
+    #include STD_HEAD
 #endif
 
-#include STD_HEAD
+
 
 
 int VerificaPassword(char* username, char* password){
@@ -16,9 +17,11 @@ int VerificaPassword(char* username, char* password){
     printf("INSERITI: %s - %s\n", username, password);
     char* req_username = (char*)calloc(sizeof(char), STRLEN);
     char* req_password = (char*)calloc(sizeof(char), STRLEN);
+    float buff_saldo;
 
     while(fscanf(Utenti, "%s", req_username) != EOF){
         fscanf(Utenti, "%s", req_password);  
+        fscanf(Utenti, "%f", &buff_saldo);
         printf("trying: %s - %s\n", req_username, req_password); 
         
         if(strcmp(username, req_username) == 0){
@@ -72,7 +75,7 @@ void RegistraUtente(){
             printf("Inserire password: ");
             scanf("%s", password);
 
-            fprintf(file, "\n%s %s", n_username, password);
+            fprintf(file, "\n%s %s 0.00", n_username, password);
             fclose(file);
 
             printf("---UTENTE REGISTRATO CON SUCCESSO---\n");
@@ -142,4 +145,23 @@ void FirstScreen(char* user){
             RegistraUtente();
     }
 
+}
+
+float GetBalance(char* user){
+    FILE* Utenti = fopen(U_PATH, "r");
+    
+    char req_username[STRLEN];
+    char buff[STRLEN];
+    float balance;
+
+     while(fscanf(Utenti, "%s", req_username) != EOF){
+        fscanf(Utenti, "%s", buff);  
+        fscanf(Utenti, "%f", &balance);
+
+        if(strcmp(user, req_username) == 0)
+            return balance;
+        else
+            return 0.0;
+    
+    }
 }

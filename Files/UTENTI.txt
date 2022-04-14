@@ -1,6 +1,6 @@
-Salvatore   progetto
-Mara    fjk
-Albero  Binario
-Gufetto34   crucru
-user password
-Marcolino Bellino
+Salvatore   progetto    300.78
+Mara    fjk     230.98
+Albero  Binario 90.21
+Gufetto34   crucru  0.00
+user password   670.23
+Marcolino Bellino   700.30

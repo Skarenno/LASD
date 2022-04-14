@@ -1,17 +1,17 @@
 #include "mainheader.h"
 
-void WelcomeScreen();
+void WelcomeScreen(char* user);
 
 int main(){
     FILE* Capi = fopen(C_PATH, "r+");
     Node* Head_Capi;
     char user[STRLEN];
-
     Head_Capi = Initialize_Node(Head_Capi);
 
     FirstScreen(user);
     Head_Capi = Read_List(Capi, Head_Capi);
     WelcomeScreen(user);
+    PrintList(Head_Capi);
 }
 
 void WelcomeScreen(char* user){
@@ -23,5 +23,6 @@ void WelcomeScreen(char* user){
     printf("*************\n");
     printf("*************\n");
 
-    printf("Hai effettutato l'accesso come \"%s\"\n", user);
+    printf("Hai effettutato l'accesso come \"%s\", il tuo saldo equivale a %.2f", user, GetBalance(user));
+
 }

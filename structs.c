@@ -11,8 +11,8 @@ typedef struct capo{
     unsigned short int L;
     unsigned short int XL;
     char nome[STRLEN];
-    double prezzo;
-} Capo;
+    float prezzo;
+}Capo;
 
 
 typedef struct nodo{
@@ -27,4 +27,15 @@ Node* Initialize_Node(Node* Head){
     Head->prev = NULL;
 
     return Head;
+}
+
+void PrintList(Node* Head){
+
+    if(!Head)
+        return;
+    
+    printf("%s in vendita a %.2f.", Head->capo.nome, Head->capo.prezzo);
+    printf(" --TAGLIE DISPONIBILI: S-%d M-%d L-%d XL-%d\n", Head->capo.S, Head->capo.M, Head->capo.L, Head->capo.XL);
+    PrintList(Head->next);
+    return;
 }

@@ -1,10 +1,9 @@
 #ifndef STD_HEAD
     #define STD_HEAD "standard_header.h"
+    #include STD_HEAD
 #endif
 
 
-#include STD_HEAD
-#include "structs.c"
 
 Node* Read_List(FILE* file, Node* Head){
     
@@ -46,7 +45,7 @@ Node* Read_List(FILE* file, Node* Head){
             }
         }
 
-        fscanf(file, "%lf", &Head->capo.prezzo);
+        fscanf(file, "%f", &Head->capo.prezzo);
         Head->next = Read_List(file, Head->next);
 
         if(Head->next)
