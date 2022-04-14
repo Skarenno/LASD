@@ -3,10 +3,14 @@
 void WelcomeScreen();
 
 int main(){
-    char user[STRLEN];
-    FirstScreen(user);
+    FILE* Capi = fopen(C_PATH, "r+");
     Node* Head_Capi;
-    Head_Capi = Read_List(NULL, Head_Capi);
+    char user[STRLEN];
+
+    Head_Capi = Initialize_Node(Head_Capi);
+
+    FirstScreen(user);
+    Head_Capi = Read_List(Capi, Head_Capi);
     WelcomeScreen(user);
 }
 

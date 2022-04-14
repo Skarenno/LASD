@@ -1,8 +1,9 @@
 #ifndef STD_HEAD
     #define STD_HEAD "standard_header.h"
+    #include STD_HEAD
 #endif
 
-#include STD_HEAD
+
 
 typedef struct capo{
     unsigned short int S;
@@ -20,3 +21,10 @@ typedef struct nodo{
     struct nodo* prev;
 }Node;
 
+Node* Initialize_Node(Node* Head){
+    Head = (Node*)malloc(sizeof(Node));
+    Head->next = NULL;
+    Head->prev = NULL;
+
+    return Head;
+}

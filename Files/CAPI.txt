@@ -1,2 +1,2 @@
-Felpa_Nike_Blu S:1  M:7 L:9 XL:0    47,70
-Scarpe_Adidas   S:0 M:1 L:21 XL:2   50,00
+Felpa_Nike_Blu S:1  M:7 L:9 XL:0    47.70
+Scarpe_Adidas   S:0 M:1 L:21 XL:2   50.00

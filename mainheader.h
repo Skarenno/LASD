@@ -1,7 +1,5 @@
-#include "structs.c"
 #include "GestioneUtenti.c"
 #include "GestioneCapi.c"
-
 
 void RegistraUtente();
 int VerificaPassword(char* username, char* password);
