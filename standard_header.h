@@ -10,3 +10,8 @@
 #define U_PATH "./Files/UTENTI.txt"
 #define C_PATH "./Files/CAPI.txt"
 #define N_TAGLIE 4
+
+#ifndef STRUCTS 
+    #define STRUCTS "structs.c"
+    #include STRUCTS
+#endif

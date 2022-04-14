@@ -1,6 +1,6 @@
-#include "GestioneUtenti.c"
 #include "GestioneCapi.c"
-#include "structs.c"
+#include "GestioneUtenti.c"
+
 
 void RegistraUtente();
 int VerificaPassword(char* username, char* password);

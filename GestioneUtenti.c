@@ -160,8 +160,7 @@ float GetBalance(char* user){
 
         if(strcmp(user, req_username) == 0)
             return balance;
-        else
-            return 0.0;
-    
     }
+
+    return 0.0;
 }
