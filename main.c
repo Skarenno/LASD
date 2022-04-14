@@ -1,11 +1,12 @@
-#include "structs.c"
-#include "GestioneUtenti.c"
+#include "mainheader.h"
 
 void WelcomeScreen();
 
 int main(){
     char user[STRLEN];
     FirstScreen(user);
+    Node* Head_Capi;
+    Head_Capi = Read_List(NULL, Head_Capi);
     WelcomeScreen(user);
 }
 

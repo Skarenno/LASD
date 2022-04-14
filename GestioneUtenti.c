@@ -1,24 +1,16 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
-#include <malloc.h>
-#include <unistd.h>
+#ifndef STD_HEAD
+    #define STD_HEAD "standard_header.h"
+#endif
 
-#define STRLEN 20
-#define U_PATH "./Files/UTENTI.txt"
+#include STD_HEAD
 
-void RegistraUtente();
-int VerificaPassword(char* username, char* password);
-char* Accesso(char* username);
-void FirstScreen(char* user);
 
 int VerificaPassword(char* username, char* password){
 
     FILE* Utenti = fopen(U_PATH, "r+");
     if(!Utenti){
-        printf("Impossibile accedere al \"database\"\n");
-        exit(1);
+        printf("Impossibile accedere al \"database Utenti\"\n");
+        exit(EXIT_FAILURE);
     }
 
     printf("INSERITI: %s - %s\n", username, password);
