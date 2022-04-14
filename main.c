@@ -10,7 +10,7 @@ int main(){
     FILE* Utenti = fopen(U_PATH, "r+");
 
     Clothes_Node* ClothesList_Head;
-    User_Node* UserList_Head;
+    User_Node* UserList_Head, *Current_User;
 
     char user[STRLEN];
     unsigned short int op_choice;
@@ -27,7 +27,9 @@ int main(){
     Utenti = Rewrite_User_File(UserList_Head);
     strcpy(user, FirstScreen(user));
     printf("\n------------%s -----------", user);
-    User_Node* Current_User = FindUser(user, UserList_Head);
+    
+    Current_User = Initialize_User_Node(Current_User);
+    Current_User = FindUser(user, UserList_Head);
 
     op_choice = WelcomeScreen(Current_User);
 

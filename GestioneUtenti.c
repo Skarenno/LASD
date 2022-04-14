@@ -136,9 +136,9 @@ char* FirstScreen(char* user){
         if(r_action == 1){
             strcpy(user, Accesso(user));
             if(user[0] != '\0')
-                break;
+                return user;;
             
-            return user;
+            
         }
         if(r_action == 2)
             RegistraUtente();

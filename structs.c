@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <malloc.h>
-
+#include <string.h>
 
 typedef struct clothe{
     unsigned short int S;
@@ -66,11 +66,16 @@ User_Node* Initialize_User_Node(User_Node* Head){
 
 
 User_Node* FindUser(char* username, User_Node* Head){
-    if(strcmp(Head->user.username, username) == 0)
-        return Head;
-    
-    if(Head->next)
-        FindUser(username, Head->next);
+    User_Node* Cursor = Initialize_User_Node(Cursor);
+    Cursor = Head;
 
+    while(Cursor){
+        if(strcmp(Cursor->user.username, username) == 0)
+            return Cursor;
+        else{
+            Cursor = Cursor->next;
+        }
+    }
+    
     return NULL;
 }

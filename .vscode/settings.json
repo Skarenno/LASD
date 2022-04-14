@@ -2,6 +2,7 @@
     "files.associations": {
         "*.py": "python",
         "*.c": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "malloc.h": "c"
     }
 }
