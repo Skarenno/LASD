@@ -1,15 +1,22 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <malloc.h>
-#include <unistd.h>
-
 #include "structs.c"
 #include "GestioneUtenti.c"
 
+void WelcomeScreen();
 
 int main(){
     char user[STRLEN];
-    strcpy(user, Accesso(user));
-    printf("Welcome %s\n", user);
+    FirstScreen(user);
+    WelcomeScreen(user);
+}
+
+void WelcomeScreen(char* user){
+
+    printf("\n*************\n");
+    printf("*           *\n");
+    printf("*  WELCOME  *\n");
+    printf("*           *\n");
+    printf("*************\n");
+    printf("*************\n");
+
+    printf("Hai effettutato l'accesso come \"%s\"\n", user);
 }
