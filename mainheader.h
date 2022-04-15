@@ -1,5 +1,11 @@
-#include "GestioneUtenti.c"
-#include "GestioneCapi.c"
+#ifndef G_UTENTI
+    #define G_UTENTI "GestioneUtenti.c"
+    #include G_UTENTI
+#endif
+#ifndef G_CAPI
+    #define G_CAPI "GestioneCapi.c"
+    #include G_CAPI
+#endif
 
 #ifndef STRUCTS 
     #define STRUCTS "structs.c"
@@ -7,11 +13,8 @@
 #endif
 
 
-Clothes_Node* Initialize_Clothes_Node(Clothes_Node* Head);
-
 void RegistraUtente();
 int VerificaPassword(char* username, char* password);
-char* Accesso(char* username);
-char* FirstScreen(char* user);
-
-Clothes_Node* Read_List(FILE* file, Clothes_Node* Head);
+char* Accesso(char* username, User_Node* Head);
+char* FirstScreen(char* user, User_Node* Head);
+FILE* Rewrite_User_File(User_Node* Head);

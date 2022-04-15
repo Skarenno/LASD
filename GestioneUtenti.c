@@ -3,6 +3,22 @@
     #include STD_HEAD
 #endif
 
+FILE* Rewrite_User_File(User_Node* Head){
+    User_Node* Cursor = Initialize_User_Node(Cursor);
+    Cursor = Head;
+
+    FILE* file = fopen(U_PATH, "w+");
+
+    while(Cursor){
+        if(Cursor->user.username[0] != '\0')
+            fprintf(file, "%s %s %.2f\n", Cursor->user.username, Cursor->user.password, Cursor->user.balance);
+            Cursor = Cursor->next;
+    }
+
+    fseek(file, 0, SEEK_SET);
+    return file;
+}
+
 int VerificaPassword(char* username, char* password){
 
     FILE* Utenti = fopen(U_PATH, "r+");
@@ -39,50 +55,51 @@ int VerificaPassword(char* username, char* password){
     return 2;
  }
 
-void RegistraUtente(){
+void RegistraUtente( User_Node* Head){
+    User_Node* Cursor = Initialize_User_Node(Cursor);
+
     bool registered;
     char n_username[STRLEN];
     char ptr_username[STRLEN];
-    char buffer[STRLEN];
-
-    FILE* file = fopen(U_PATH, "r+");
     
     printf("\nInserire nome utente da registrare (\"exit\" per uscire): ");
     while(true){
+        Cursor = Head;
         registered = false;
+
         scanf("%s", n_username);
         
         if(strcmp(n_username, "exit") == 0){
-            fclose(file);
             printf("---REGISTRAZIONE ANNULLATA---\n\n");
             return;
         }
-        fseek(file, 0, SEEK_SET);
         
-        while(fscanf(file, "%s", ptr_username) != EOF && !registered){
-            if(strcmp(n_username, ptr_username) == 0){
-                printf("Utente già registrato con questo username. Inserirne un altro( \"exit\" per uscire): ");
+        while(Cursor){
+            if(Cursor->user.username[0] != '\0' && strcmp(Cursor->user.username, n_username) == 0){
                 registered = true;
+                printf("---NOME UTENTE NON DISPONIBILE---\n Inserire un nuovo nome utente: ");
+                break;
             }
-            fscanf(file, "%s", buffer);
+            Cursor = Cursor->next;
         }
+    
 
         if(!registered){
-            char password[STRLEN];
             printf("Inserire password: ");
-            scanf("%s", password);
+            Cursor = InsertNode(Head, Cursor);
+            scanf("%s", Cursor->user.password);
 
-            fprintf(file, "\n%s %s 0.00", n_username, password);
-            fclose(file);
-
+            strcpy(Cursor->user.username, n_username);
+            FILE* Utenti = Rewrite_User_File(Head);
+            fclose(Utenti);
             printf("---UTENTE REGISTRATO CON SUCCESSO---\n");
-            break;
+            return;
         }
     }
-    return;
 }
+    
 
-char* Accesso(char* username){
+char* Accesso(char* username, User_Node* Head){
     char password[STRLEN];
     bool exit_check = false;
     char req_c;
@@ -113,7 +130,7 @@ char* Accesso(char* username){
                 scanf(" %c", &req_c);
 
                 if(req_c == 'y')
-                    RegistraUtente();
+                    RegistraUtente(Head);
                 if(req_c == 'n'){
                     printf("---RITORNO AL MENÚ INIZIALE---\n\n");
                 }
@@ -125,7 +142,7 @@ char* Accesso(char* username){
     return username;
 }
 
-char* FirstScreen(char* user){
+char* FirstScreen(char* user, User_Node* Head){
     short unsigned int r_action;
 
     while(true){
@@ -134,14 +151,14 @@ char* FirstScreen(char* user){
         scanf("%hu", &r_action);
 
         if(r_action == 1){
-            strcpy(user, Accesso(user));
+            strcpy(user, Accesso(user, Head));
             if(user[0] != '\0')
                 return user;;
             
             
         }
         if(r_action == 2)
-            RegistraUtente();
+            RegistraUtente(Head);
     }
 
 }
@@ -305,17 +322,3 @@ User_Node* Read_User_List (FILE* file, User_Node* Head){
     return Head;   
 }
 
-FILE* Rewrite_User_File(User_Node* Head){
-    User_Node* Cursor = Initialize_User_Node(Cursor);
-    Cursor = Head;
-
-    FILE* file = fopen(U_PATH, "w+");
-
-    while(Cursor){
-    fprintf(file, "%s %s %.2f\n", Cursor->user.username, Cursor->user.password, Cursor->user.balance);
-    Cursor = Cursor->next;
-    }
-
-    fseek(file, 0, SEEK_SET);
-    return file;
-}
