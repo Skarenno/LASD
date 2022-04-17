@@ -1,15 +1,16 @@
-#ifndef STRLEN
-    #define STRLEN 30
-#endif
-
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
+
+#ifndef STRLEN
+    #define STRLEN 100
+#endif
 
 struct __capo{
     char name[STRLEN];
     unsigned short int S, M, L;
     float price;
+    int code;
 };
 
 typedef struct tr_node{
@@ -30,21 +31,24 @@ TreeNode* WriteLeaf(TreeNode* leaf, struct __capo capo){
     leaf->capo.M = capo.M;
     leaf->capo.L = capo.L;
     leaf->capo.price = capo.price;
+    leaf->capo.code = capo.code;
     
     leaf->left = leaf->right = NULL;
     return leaf;
 }
 
 TreeNode* InsertLeaf (TreeNode* Root, struct __capo capo){
-    if(Root == NULL)
+    if(Root == NULL){
         Root = Initialize_Tree_Node(Root);
-        WriteLeaf(Root, capo);
+        Root = WriteLeaf(Root, capo);
+        return Root;
+    }
 
-    if(strcmp(Root->capo.name, capo.name) <= 0){
-        Root->left = WriteLeaf(Root->left, capo);
+    if(strcmp(Root->capo.name, capo.name) >= 0){
+        Root->left = InsertLeaf(Root->left, capo);
     }
     else{
-        Root->right = WriteLeaf(Root->right, capo);
+        Root->right = InsertLeaf(Root->right, capo);
     }
     
     return Root;
@@ -57,6 +61,7 @@ void StringSort(struct __capo *array, int length){
 
     for(int i = 1; i < length; i++){
         tmp = array[i];
+        j = i - 1;
 
         while(j >= 0 && strcmp(array[j].name, tmp.name) < 0){
             array[j + 1] = array[j];
@@ -66,16 +71,36 @@ void StringSort(struct __capo *array, int length){
     }
 }
 
-TreeNode* WriteTree(TreeNode* Root, struct __capo capi[], int index){
+TreeNode* WriteTree(TreeNode* Root, struct __capo* capi, int index){
+    if(index == 0)
+        return Root;
     int start = index/2;
+
+    if(index == 1){
+        Root= InsertLeaf(Root, capi[index - 1]);
+        Root = InsertLeaf(Root, capi[index]);
+        return Root;
+    }
+    
     Root = InsertLeaf(Root, capi[start]);
     for(int i = 0; i < index; i++)
-        InsertLeaf(Root, capi[i]);
+        if(i!= start)
+            InsertLeaf(Root, capi[i]);
 
 
     return Root;
 }
 
+
+void PrintInOrder(TreeNode* Root){
+    if(Root != NULL){
+        PrintInOrder(Root->left);
+        printf("%s\n", Root->capo.name);
+        PrintInOrder(Root->right);
+    }
+
+    return;
+}
 
 struct __user{
     char username[STRLEN];

@@ -18,12 +18,15 @@ int main(){
 
     User_Node* UserList_Head, *Current_User;
 
+    
     UserList_Head = Initialize_User_Node(UserList_Head);
     UserList_Head = Read_User_List(Utenti, UserList_Head);
 
-    TreeNode** ClothesCategories;
-    ClothesCategories = (TreeNode**)malloc(sizeof(TreeNode*));
-    OrganizeClothes(ClothesCategories);
+    TreeNode* Clothes;
+    Initialize_Tree_Node(Clothes);
+
+    Clothes = OrganizeClothes(Clothes);
+
 
     while(quit){
         Utenti = Rewrite_User_File(UserList_Head);
@@ -36,8 +39,10 @@ int main(){
 
         switch(op_choice){
             case 2:
-                quit = false;
-                break;
+                while(true){
+                    BuyMenu(Current_User, Clothes);
+                    Utenti = Rewrite_User_File(UserList_Head);
+                }
 
             case 3:
                 user[0] = '\0';

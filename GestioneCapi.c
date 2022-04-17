@@ -3,26 +3,15 @@
     #include STD_HEAD
 #endif
 
-unsigned short int DecideCategory (char* name){
-    if(strstr(name, "Maglietta") == NULL){
-        if(strstr(name, "Felpa") == NULL){
-            if(strstr(name, "Scarpe") == NULL){
-                printf("\nNO CATEGORY\n");
-            }
-            return 2;
-        }
-        return 1;
-    }
-    return 0;
-}
 
-FILE* LoadCapo(FILE* file, struct __capo* category, int arr_index, char* name){
+struct __capo* LoadCapo(FILE* file, struct __capo* array, int arr_index, char* name){
     char tok[2] = ":";
     char* str_token;
     char str_temp[STRLEN];
     short unsigned int disp_taglie;
 
-    strcpy(category[arr_index].name, name);
+    strcpy(array[arr_index].name, name);
+
     for(int i = 0; i < N_TAGLIE; i++){
         fscanf(file, "%s", str_temp);
         str_token = strtok(str_temp, tok);
@@ -30,15 +19,15 @@ FILE* LoadCapo(FILE* file, struct __capo* category, int arr_index, char* name){
 
         switch (i){
         case 0:
-            category[arr_index].S = disp_taglie;
+            array[arr_index].S = disp_taglie;
             break;
         
         case 1:
-            category[arr_index].M = disp_taglie;
+            array[arr_index].M = disp_taglie;
             break;
 
         case 2:
-            category[arr_index].L = disp_taglie;
+            array[arr_index].L = disp_taglie;
             break;
 
         default:
@@ -46,51 +35,154 @@ FILE* LoadCapo(FILE* file, struct __capo* category, int arr_index, char* name){
         }
     }
 
-    fscanf(file, "%f", &category[arr_index].price);
-    return file;
+    array[arr_index].code = arr_index;
+    fscanf(file, "%f", &array[arr_index].price);
+    return array;
 }
 
-void OrganizeClothes(TreeNode* Clothes[]){
+TreeNode* OrganizeClothes(TreeNode* Clothes){
     FILE* Capi = fopen(C_PATH, "r");
 
-    struct __capo maglie[ARRLEN];
-    struct __capo felpe[ARRLEN];
-    struct __capo scarpe[ARRLEN];
-
-    int ind_maglie = 0;
-    int ind_felpe = 0;
-    int ind_scarpe = 0;
+    struct __capo *arr_capi = (struct __capo*)calloc(ARRLEN, sizeof(struct __capo));
+    int index = 0;
 
     char temp_str[STRLEN];
     
     while (!feof(Capi)){
         fscanf(Capi, "%s", temp_str);
-        unsigned short int category = DecideCategory(temp_str);
-        switch(category){
-            case 0:
-                Capi = LoadCapo(Capi, maglie, ind_maglie, temp_str);
-                ind_maglie += 1;
-                break;
+        arr_capi = LoadCapo(Capi, arr_capi, index, temp_str);
+        index += 1;
+    }
+    
+    StringSort(arr_capi, index);
+    Clothes = WriteTree(Clothes, arr_capi, index);
+  
+    return Clothes;
+}
 
-            case 1:
-                Capi = LoadCapo(Capi, felpe, ind_felpe, temp_str);
-                ind_felpe += 1;
-                break;
+void PrintClothe(TreeNode* Clothe){
+    printf("CodArticolo: %d. %s -- S:%hu M:%hu L:%hu --- Prezzo: %.2f\n", Clothe->capo.code, 
+    Clothe->capo.name, Clothe->capo.S, Clothe->capo.M, Clothe->capo.L, Clothe->capo.price);
+}
 
-            case 2:
-                Capi = LoadCapo(Capi, scarpe, ind_scarpe, temp_str);
-                ind_scarpe += 1;
-                break;
+void FindClothes(TreeNode* Clothes, char* choice){
+    choice[0] = toupper(choice[0]);
+
+    if(Clothes != NULL){
+        FindClothes(Clothes->left, choice);
+        if(strstr(Clothes->capo.name, choice) != NULL){
+            PrintClothe(Clothes);
         }
+        FindClothes(Clothes->right, choice);
+    }
+    return;
+}
+
+TreeNode* SelectMerch (TreeNode* Clothes, int code){
+    if(Clothes->capo.code == code)
+        return Clothes;
+
+    TreeNode* Merch = Clothes;
+
+    if(Clothes->left != NULL)
+        Clothes = SelectMerch(Clothes->left, code);
+    if((Merch->capo.code != code) && (Merch->right != NULL)){
+        Merch = SelectMerch(Merch->right, code);
+        if(Merch->capo.code == code)
+            return Merch;
     }
 
-    StringSort(maglie, ind_maglie);
-    StringSort(felpe, ind_maglie);
-    StringSort(scarpe, ind_maglie);
+    return Clothes;    
+}
 
-    Clothes[0] = WriteTree(Clothes[0], maglie, ind_maglie);
-    Clothes[1] = WriteTree(Clothes[1], felpe, ind_felpe);
-    Clothes[2] = WriteTree(Clothes[2], scarpe, ind_scarpe);
+void Buy(User_Node* User, TreeNode* Merch){
+    char size;
+    bool correct = false;
 
+    printf("Si è selezionato: ");
+    PrintClothe(Merch);
+    printf("Immettere la taglia desiderata: ");
+    scanf(" %c", &size);
 
+    size = toupper(size);
+    // check taglia
+      switch (size){
+            case 'S':
+                if(Merch->capo.S <= 0){
+                    printf("----TAGLIA NON DISPONIBILE---");
+                    return;
+                }
+                else{
+                    if(User->user.balance > Merch->capo.price){
+                        User->user.balance <= Merch->capo.price;
+                        Merch->capo.S -= 1;
+                    }
+                }
+                break;
+            
+            case 'M':
+                if(Merch->capo.M <= 0){
+                    printf("----TAGLIA NON DISPONIBILE---");
+                    return;
+                }
+                else{
+                    if(User->user.balance > Merch->capo.price){
+                        User->user.balance <= Merch->capo.price;
+                        Merch->capo.S -= 1;
+                    }
+                }
+
+            case 'L':
+                if(Merch->capo.L <= 0){
+                    printf("----TAGLIA NON DISPONIBILE---");
+                    return;
+                }
+                else{
+                    if(User->user.balance > Merch->capo.price){
+                        User->user.balance <= Merch->capo.price;
+                        Merch->capo.S -= 1;
+                    }
+                }
+                break;
+
+            default:
+                printf("Taglia non valida");
+                return;
+        }
+}
+
+void BuyMenu(User_Node* User, TreeNode* Clothes){
+
+    char cat_choice[STRLEN];
+    int cod_merch;
+    
+    printf("Che categoria si vuole visualizzare?\n");
+    for(int i = 0; i < N_CATEGORIES; i++){
+        printf("%s/", categories[i]);
+    }
+
+    while(true){
+        printf("\nImmettere categoria: ");
+        scanf("%s", cat_choice);
+
+        printf("\n\n --------------\n");
+        FindClothes(Clothes, cat_choice);
+        printf("\n\n --------------\n");
+
+        printf("Imettere il codice dell'articolo da acquistare (-1 per cambiare categoria): ");
+        scanf("%d", &cod_merch);
+
+        if(cod_merch == -1)
+            break;
+
+        PrintInOrder(Clothes);
+        TreeNode* SelectedClothe = Initialize_Tree_Node(SelectedClothe);
+        SelectedClothe = SelectMerch(Clothes, cod_merch);
+
+        if(SelectedClothe != NULL){
+            Buy(User, SelectedClothe);
+            //Rewrite_Clothes_File(Clothes);
+        }
+        return;
+    }
 }
