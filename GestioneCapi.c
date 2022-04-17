@@ -151,6 +151,23 @@ void Buy(User_Node* User, TreeNode* Merch){
         }
 }
 
+FILE* PrintInFile(FILE* file, struct __capo clothe){
+    fprintf(file, "%s S:%hu M:%hu L:%hu %f\n", clothe.name, clothe.S, clothe.M, clothe.L, clothe.price);
+    return file;
+}
+
+void Rewrite_Clothes_File(TreeNode* Clothes, FILE* file){
+
+    if(Clothes != NULL){
+        Rewrite_Clothes_File(Clothes->left, file);
+        file = PrintInFile(file, Clothes->capo);
+        Rewrite_Clothes_File(Clothes->right, file);
+    }
+
+    return;
+}
+
+
 void BuyMenu(User_Node* User, TreeNode* Clothes){
 
     char cat_choice[STRLEN];
@@ -175,13 +192,14 @@ void BuyMenu(User_Node* User, TreeNode* Clothes){
         if(cod_merch == -1)
             break;
 
-        PrintInOrder(Clothes);
+        // PrintInOrder(Clothes);
         TreeNode* SelectedClothe = Initialize_Tree_Node(SelectedClothe);
         SelectedClothe = SelectMerch(Clothes, cod_merch);
 
         if(SelectedClothe != NULL){
             Buy(User, SelectedClothe);
-            //Rewrite_Clothes_File(Clothes);
+            FILE* C_file = fopen(C_PATH, "w+");
+            Rewrite_Clothes_File(Clothes, C_file);
         }
         return;
     }
