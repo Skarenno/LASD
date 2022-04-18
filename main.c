@@ -9,7 +9,6 @@
 
 
 int main(){
-    FILE* Capi = fopen(C_PATH, "r+");
     FILE* Utenti = fopen(U_PATH, "r+");
 
     char user[STRLEN];
@@ -24,7 +23,6 @@ int main(){
 
     TreeNode* Clothes;
     Initialize_Tree_Node(Clothes);
-
     Clothes = OrganizeClothes(Clothes);
 
 
@@ -39,10 +37,13 @@ int main(){
 
         switch(op_choice){
             case 2:
-                while(true){
-                    BuyMenu(Current_User, Clothes);
-                    Utenti = Rewrite_User_File(UserList_Head);
-                }
+                BuyMenu(Current_User, Clothes);
+                char AFAMMOCC[STRLEN];
+
+                FILE* W_Capi = fopen(C_PATH, "w+");
+                Rewrite_Clothes_File(Clothes, W_Capi);
+                Utenti = Rewrite_User_File(UserList_Head);
+                break;
 
             case 3:
                 user[0] = '\0';

@@ -10,6 +10,9 @@ struct __capo* LoadCapo(FILE* file, struct __capo* array, int arr_index, char* n
     char str_temp[STRLEN];
     short unsigned int disp_taglie;
 
+    if(file == NULL)
+        return NULL;
+
     strcpy(array[arr_index].name, name);
 
     for(int i = 0; i < N_TAGLIE; i++){
@@ -128,9 +131,10 @@ void Buy(User_Node* User, TreeNode* Merch){
                 else{
                     if(User->user.balance > Merch->capo.price){
                         User->user.balance <= Merch->capo.price;
-                        Merch->capo.S -= 1;
+                        Merch->capo.M -= 1;
                     }
                 }
+                break;
 
             case 'L':
                 if(Merch->capo.L <= 0){
@@ -140,7 +144,7 @@ void Buy(User_Node* User, TreeNode* Merch){
                 else{
                     if(User->user.balance > Merch->capo.price){
                         User->user.balance <= Merch->capo.price;
-                        Merch->capo.S -= 1;
+                        Merch->capo.L -= 1;
                     }
                 }
                 break;
@@ -158,11 +162,12 @@ FILE* PrintInFile(FILE* file, struct __capo clothe){
 
 void Rewrite_Clothes_File(TreeNode* Clothes, FILE* file){
 
-    if(Clothes != NULL){
-        Rewrite_Clothes_File(Clothes->left, file);
-        file = PrintInFile(file, Clothes->capo);
-        Rewrite_Clothes_File(Clothes->right, file);
-    }
+    if(Clothes == NULL)
+        return;
+
+    Rewrite_Clothes_File(Clothes->left, file);
+    Rewrite_Clothes_File(Clothes->right, file);
+    file = PrintInFile(file, Clothes->capo);
 
     return;
 }
@@ -179,8 +184,11 @@ void BuyMenu(User_Node* User, TreeNode* Clothes){
     }
 
     while(true){
-        printf("\nImmettere categoria: ");
+        printf("\nImmettere categoria (exit per uscire): ");
         scanf("%s", cat_choice);
+
+        if(strcmp(cat_choice, "exit") == 0)
+            return;
 
         printf("\n\n --------------\n");
         FindClothes(Clothes, cat_choice);
@@ -198,9 +206,6 @@ void BuyMenu(User_Node* User, TreeNode* Clothes){
 
         if(SelectedClothe != NULL){
             Buy(User, SelectedClothe);
-            FILE* C_file = fopen(C_PATH, "w+");
-            Rewrite_Clothes_File(Clothes, C_file);
         }
-        return;
     }
 }
