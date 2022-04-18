@@ -40,8 +40,8 @@ int main(){
                 BuyMenu(Current_User, Clothes);
                 char AFAMMOCC[STRLEN];
 
-                FILE* W_Capi = fopen(C_PATH, "w+");
-                Rewrite_Clothes_File(Clothes, W_Capi);
+                //FILE* W_Capi = fopen(C_PATH, "w");      // THIS LINE CAUSES SEG FAULT
+                // Rewrite_Clothes_File(Clothes, W_Capi);
                 Utenti = Rewrite_User_File(UserList_Head);
                 break;
 

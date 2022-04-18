@@ -60,6 +60,7 @@ TreeNode* OrganizeClothes(TreeNode* Clothes){
     StringSort(arr_capi, index);
     Clothes = WriteTree(Clothes, arr_capi, index);
   
+    fclose(Capi);
     return Clothes;
 }
 
