@@ -241,7 +241,9 @@ float Load (float balance){
     }
 }
 
-unsigned short int  WelcomeScreen(User_Node* User){
+
+
+unsigned short int  WelcomeScreen(User_Node* User, WaitingNode* List){
     unsigned short int req_action;
     float old_balance;
     bool exit = false;
@@ -307,7 +309,7 @@ unsigned short int  WelcomeScreen(User_Node* User){
 }
 
 User_Node* Read_User_List (FILE* file, User_Node* Head){
-    if(!Head->next)
+    if(Head->next == NULL)
         Head->next = Initialize_User_Node(Head);
 
     if(!feof(file)){

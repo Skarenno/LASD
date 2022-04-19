@@ -2,10 +2,12 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 
 #ifndef STRLEN
     #define STRLEN 100
 #endif
+
 
 struct __capo{
     char name[STRLEN];
@@ -123,6 +125,9 @@ void PrintInOrder(TreeNode* Root){
     return;
 }
 
+
+
+
 struct __user{
     char username[STRLEN];
     char password[STRLEN];
@@ -170,3 +175,25 @@ User_Node* InsertNode(User_Node* Head, User_Node* NewNode){
     prev->next = NewNode;
     return NewNode;
 }
+
+
+
+
+struct __waiter{
+    char name[STRLEN];
+    char clothe[STRLEN];
+    char size;
+};
+
+typedef struct waiting_l{
+    struct __waiter waiter;
+    struct waiting_l* next;
+}WaitingNode;
+
+
+WaitingNode* Initialize_Waiting_Node(WaitingNode* Node){
+    Node = (WaitingNode*)malloc(sizeof(WaitingNode));
+    Node->waiter.name[0] = '\0';
+    Node->next = NULL;
+}
+

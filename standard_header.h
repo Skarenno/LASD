@@ -5,7 +5,7 @@
 #include <malloc.h>
 #include <unistd.h>
 #include <ctype.h>
-
+#include <math.h>
 
 #define N_CATEGORIES 3
 #define N_TAGLIE 3
@@ -13,10 +13,9 @@
 #define ARRLEN 200
 #define U_PATH "./Files/UTENTI.txt"
 #define C_PATH "./Files/CAPI.txt"
-
+#define W_PATH "./Files/WAITING.txt"
 
 const char* categories[N_CATEGORIES] = {"Maglia", "Felpa", "Scarpe"};
-
 
 #ifndef STRUCTS 
     #define STRUCTS "structs.c"

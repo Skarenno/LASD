@@ -3,6 +3,10 @@
     #include STD_HEAD
 #endif
 
+#ifndef G_WAITING
+    #define G_WAITING "GestioneWaiting.c"
+    #include G_WAITING
+#endif
 
 struct __capo* LoadCapo(FILE* file, struct __capo* array, int arr_index, char* name){
     char tok[2] = ":";
@@ -61,6 +65,7 @@ TreeNode* OrganizeClothes(TreeNode* Clothes){
     }
     
     StringSort(arr_capi, index);
+    Clothes = NULL;
     Clothes = WriteTree(Clothes, arr_capi, index);
   
     fclose(Capi);
@@ -85,6 +90,48 @@ void FindClothes(TreeNode* Clothes, char* choice){
     return;
 }
 
+WaitingNode* IsInStock(TreeNode* Clothes, WaitingNode* List, WaitingNode* Waited){
+
+    bool is_stocked = false;
+
+    if(Clothes != NULL){
+        List = IsInStock(Clothes->left, List, Waited);
+        if(strcmp(Clothes->capo.name, Waited->waiter.clothe) == 0){
+            switch(Waited->waiter.size){
+                case 'S':
+                    if(Clothes->capo.S > 0){
+                        printf("-- AGGIORNAMENTO -> %s  Taglia S:%hu\n", Clothes->capo.name, Clothes->capo.S);  
+                        is_stocked = true;
+                    }
+                    break;
+
+                case 'M':
+                    if(Clothes->capo.M > 0){
+                        printf("-- AGGIORNAMENTO -> %s  Taglia M: %hu\n", Clothes->capo.name, Clothes->capo.M);
+                        is_stocked = true;
+                    }
+                    break;
+
+                case 'L':
+                    if(Clothes->capo.L > 0){
+                        printf("-- AGGIORNAMENTO -> %s  Taglia L: %hu\n", Clothes->capo.name, Clothes->capo.L);
+                        is_stocked = true;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
+            if(is_stocked)
+                List = RemoveWaiting(List, Waited);
+        }
+        List = IsInStock(Clothes->right, List ,Waited);
+    }
+
+    return List;
+}
+
 TreeNode* SelectMerch (TreeNode* Clothes, int code){
     if(Clothes->capo.code == code)
         return Clothes;
@@ -102,7 +149,7 @@ TreeNode* SelectMerch (TreeNode* Clothes, int code){
     return Clothes;    
 }
 
-void Buy(User_Node* User, TreeNode* Merch){
+WaitingNode* Buy(User_Node* User, TreeNode* Merch, WaitingNode* List){
     char size;
     bool correct = false;
 
@@ -117,12 +164,17 @@ void Buy(User_Node* User, TreeNode* Merch){
             case 'S':
                 if(Merch->capo.S <= 0){
                     printf("----TAGLIA NON DISPONIBILE---");
-                    return;
+                    printf("\nAggiungo il capo alla lista d'attesa\n");
+                    sleep(1);
+                    List = AddWaiting(List, User->user.username, Merch->capo.name, 'S');
+                    return List;
                 }
                 else{
                     if(User->user.balance > Merch->capo.price){
                         User->user.balance <= Merch->capo.price;
                         Merch->capo.S -= 1;
+                        correct = true;
+                        printf("\n--- ACQUISTO EFFETTUATO CON SUCCESSO ---");
                     }
                 }
                 break;
@@ -130,12 +182,18 @@ void Buy(User_Node* User, TreeNode* Merch){
             case 'M':
                 if(Merch->capo.M <= 0){
                     printf("----TAGLIA NON DISPONIBILE---");
-                    return;
+                    printf("\nAggiungo il capo alla lista d'attesa\n");
+                    sleep(1);
+                    return List;
+                    List = AddWaiting(List, User->user.username, Merch->capo.name, 'M');
                 }
                 else{
                     if(User->user.balance > Merch->capo.price){
                         User->user.balance <= Merch->capo.price;
                         Merch->capo.M -= 1;
+                        correct = true;
+                        printf("\n--- ACQUISTO EFFETTUATO CON SUCCESSO ---");
+
                     }
                 }
                 break;
@@ -143,20 +201,26 @@ void Buy(User_Node* User, TreeNode* Merch){
             case 'L':
                 if(Merch->capo.L <= 0){
                     printf("----TAGLIA NON DISPONIBILE---");
-                    return;
+                    printf("\nAggiungo il capo alla lista d'attesa\n");
+                    sleep(1);
+                    List = AddWaiting(List, User->user.username, Merch->capo.name, 'L');
+                    return List;
                 }
                 else{
                     if(User->user.balance > Merch->capo.price){
                         User->user.balance <= Merch->capo.price;
                         Merch->capo.L -= 1;
+                        printf("\n--- ACQUISTO EFFETTUATO CON SUCCESSO ---");
                     }
                 }
                 break;
 
             default:
                 printf("Taglia non valida");
-                return;
+                return List;
         }
+
+    return List;
 }
 
 FILE* PrintInFile(FILE* file, struct __capo clothe){
@@ -164,14 +228,14 @@ FILE* PrintInFile(FILE* file, struct __capo clothe){
     return file;
 }
 
-void Write(TreeNode* Clothes, FILE* file){
+void WriteClothesInFile(TreeNode* Clothes, FILE* file){
     if(Clothes == NULL)
         return;
 
     file = PrintInFile(file, Clothes->capo);
     fseek(file, 0, SEEK_END);
-    Write(Clothes->left, file);
-    Write(Clothes->right, file);
+    WriteClothesInFile(Clothes->left, file);
+    WriteClothesInFile(Clothes->right, file);
 
     return;
 }
@@ -187,8 +251,8 @@ void Rewrite_Clothes_File(TreeNode* Clothes){
     FILE* W_capi = fopen(C_PATH, "w+");
     fprintf(W_capi, "%s S:%hu M:%hu L:%hu %f", Clothes->capo.name, Clothes->capo.S, 
                    Clothes->capo.M, Clothes->capo.L, Clothes->capo.price);
-    Write(Clothes->left, W_capi);
-    Write(Clothes->right, W_capi);
+    WriteClothesInFile(Clothes->left, W_capi);
+    WriteClothesInFile(Clothes->right, W_capi);
 
     fclose(W_capi);
 
@@ -196,15 +260,14 @@ void Rewrite_Clothes_File(TreeNode* Clothes){
 }
 
 
-void BuyMenu(User_Node* User, TreeNode* Clothes){
+WaitingNode* BuyMenu(User_Node* User, TreeNode* Clothes, WaitingNode* List){
 
     char cat_choice[STRLEN];
     int cod_merch;
-    
-    
+    bool quit = false;
 
-    while(true){
-        printf("Che categoria si vuole visualizzare?\n");
+    while(!quit){
+        printf("\n\nChe categoria di capo si vuole visualizzare?\n");
 
         for(int i = 0; i < N_CATEGORIES; i++)
             printf("%s/", categories[i]);
@@ -213,25 +276,29 @@ void BuyMenu(User_Node* User, TreeNode* Clothes){
         scanf("%s", cat_choice);
 
         if(strcmp(cat_choice, "exit") == 0)
-            return;
+            return List;
 
         printf("\n\n --------------\n");
         FindClothes(Clothes, cat_choice);
-        printf("\n\n --------------\n");
+        printf(" --------------\n\n");
 
-        printf("Imettere il codice dell'articolo da acquistare (-1 per cambiare categoria): ");
-        scanf("%d", &cod_merch);
+        while(true){
+            printf("Imettere il codice dell'articolo da acquistare (-1 per cambiare categoria): ");
+            scanf("%d", &cod_merch);
 
-        if(cod_merch == -1)
-            break;
+            if(cod_merch == -1)
+                break;
 
-        TreeNode* SelectedClothe = Initialize_Tree_Node(SelectedClothe);
-        SelectedClothe = SelectMerch(Clothes, cod_merch);
+            TreeNode* SelectedClothe = Initialize_Tree_Node(SelectedClothe);
+            SelectedClothe = SelectMerch(Clothes, cod_merch);
+            quit = true;
 
-        if(SelectedClothe != NULL){
-            Buy(User, SelectedClothe);
+            if(SelectedClothe != NULL){
+                List = Buy(User, SelectedClothe, List);
+            }
+
+            Rewrite_Clothes_File(Clothes);
         }
-
-        Rewrite_Clothes_File(Clothes);
     }
+    return List;
 }
