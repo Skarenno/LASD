@@ -17,7 +17,12 @@ int main(){
 
     User_Node* UserList_Head, *Current_User;
 
-    
+    if(!IsUsable(Utenti)){
+        printf("\nUSER DATABASE ERROR, EXITING!!");
+        sleep(2);
+        exit(EXIT_FAILURE);
+    }
+
     UserList_Head = Initialize_User_Node(UserList_Head);
     UserList_Head = Read_User_List(Utenti, UserList_Head);
 
@@ -38,10 +43,7 @@ int main(){
         switch(op_choice){
             case 2:
                 BuyMenu(Current_User, Clothes);
-                char AFAMMOCC[STRLEN];
 
-                //FILE* W_Capi = fopen(C_PATH, "w");      // THIS LINE CAUSES SEG FAULT
-                // Rewrite_Clothes_File(Clothes, W_Capi);
                 Utenti = Rewrite_User_File(UserList_Head);
                 break;
 
@@ -54,6 +56,7 @@ int main(){
         }
    
     }
+    Rewrite_Clothes_File(Clothes);
     Utenti = Rewrite_User_File(UserList_Head);
 }
 

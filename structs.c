@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
+#include <stdbool.h>
 
 #ifndef STRLEN
     #define STRLEN 100
@@ -17,6 +18,40 @@ typedef struct tr_node{
     struct __capo capo;
     struct tr_node *left, *right;
 }TreeNode;
+
+
+bool IsUsable(FILE* file){
+    int size;
+
+    if(file != NULL){
+        fseek(file, 0, SEEK_END);
+        size = ftell(file);
+        fseek(file, 0, SEEK_SET);
+
+        if(size > 0)
+            return true;
+    }
+    return false;
+}
+
+void StringSort(struct __capo *array, int length){
+    int j;
+    struct __capo tmp;
+    if(length == 1)
+        return;
+    
+    for(int i = 1; i < length; i++){
+        tmp = array[i];
+        j = i - 1;
+
+        while(j >= 0 && strcmp(array[j].name, tmp.name) < 0){
+            array[j + 1] = array[j];
+            j = j - 1;
+        }
+        array[j + 1] = tmp;
+    }
+}
+
 
 TreeNode* Initialize_Tree_Node(TreeNode* Node){
     Node = (TreeNode*)malloc(sizeof(TreeNode));
@@ -37,6 +72,8 @@ TreeNode* WriteLeaf(TreeNode* leaf, struct __capo capo){
     return leaf;
 }
 
+
+
 TreeNode* InsertLeaf (TreeNode* Root, struct __capo capo){
     if(Root == NULL){
         Root = Initialize_Tree_Node(Root);
@@ -55,30 +92,14 @@ TreeNode* InsertLeaf (TreeNode* Root, struct __capo capo){
 }
 
 
-void StringSort(struct __capo *array, int length){
-    int j;
-    struct __capo tmp;
-
-    for(int i = 1; i < length; i++){
-        tmp = array[i];
-        j = i - 1;
-
-        while(j >= 0 && strcmp(array[j].name, tmp.name) < 0){
-            array[j + 1] = array[j];
-            j = j - 1;
-        }
-        array[j + 1] = tmp;
-    }
-}
-
 TreeNode* WriteTree(TreeNode* Root, struct __capo* capi, int index){
     if(index == 0)
         return Root;
+    
     int start = index/2;
 
     if(index == 1){
         Root= InsertLeaf(Root, capi[index - 1]);
-        Root = InsertLeaf(Root, capi[index]);
         return Root;
     }
     
