@@ -10,8 +10,11 @@
 int main(){
 
     char user[STRLEN];
+    char choice;
     unsigned short int op_choice;
     bool quit = true;
+    bool disconnect = false;
+
     FILE* Utenti = fopen(U_PATH, "r+");
     FILE* Waitings = fopen(W_PATH, "r+");
 
@@ -42,26 +45,33 @@ int main(){
         
         Current_User = Initialize_User_Node(Current_User);
         Current_User = FindUser(user, UserList_Head);
-
+        
         op_choice = WelcomeScreen(Current_User, Waitings_Head);
 
-        switch(op_choice){
-            case 2:
-                Waitings_Head = SearchWaiting(Current_User, Clothes, Waitings_Head);
-                Waitings_Head = BuyMenu(Current_User, Clothes, Waitings_Head);
-                Waitings = Rewrite_Waiting_File(Waitings_Head);
+        while (!disconnect){
+        
+            switch(op_choice){
+                case 2:
+                    Waitings_Head = SearchWaiting(Current_User, Clothes, Waitings_Head);
+                    Waitings_Head = BuyMenu(Current_User, Clothes, Waitings_Head);
+                    Waitings = Rewrite_Waiting_File(Waitings_Head);
+                    Utenti = Rewrite_User_File(UserList_Head);
 
-                Utenti = Rewrite_User_File(UserList_Head);
-                break;
+                    printf("Si vuole eseguire altre operazioni? (y/n): ");
+                    scanf(" %c", &choice);
+                    if(choice == 'n')  
+                        disconnect = true;
+                        
+                    break;
 
-            case 3:
-                user[0] = '\0';
-                printf("\n\n***DISCONNESSIONE UTENTE***\n");
-                printf("***************************\n\n");
-                sleep(2);
-                break;
+                case 3:
+                    user[0] = '\0';
+                    printf("\n\n***DISCONNESSIONE UTENTE***\n");
+                    printf("***************************\n\n");
+                    sleep(2);
+                    break;
+            }
         }
-   
     }
     Rewrite_Clothes_File(Clothes);
     Utenti = Rewrite_User_File(UserList_Head);

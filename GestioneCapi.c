@@ -291,7 +291,11 @@ WaitingNode* BuyMenu(User_Node* User, TreeNode* Clothes, WaitingNode* List){
 
             TreeNode* SelectedClothe = Initialize_Tree_Node(SelectedClothe);
             SelectedClothe = SelectMerch(Clothes, cod_merch);
-            quit = true;
+
+            if(User->user.balance < SelectedClothe->capo.price){
+                printf("Non si dispone di abbastanza denaro\n");
+                return List;
+            }
 
             if(SelectedClothe != NULL){
                 List = Buy(User, SelectedClothe, List);
