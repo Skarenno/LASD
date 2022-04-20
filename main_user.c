@@ -10,6 +10,8 @@
 
 int main(){
 
+    /* DICHIARAZIONI INIZIALI */
+
     char user[STRLEN];
     char choice;
     unsigned short int op_choice;
@@ -24,6 +26,12 @@ int main(){
     User_Node* UserList_Head, *Current_User;
     TreeNode* Clothes;
     WaitingNode* Waitings_Head;
+
+    /**************************/
+
+
+
+    /* CONTROLLI E INIZIALIZZAZIONI */
 
     if(!IsUsable(Utenti)){
         printf("\nUSER DATABASE ERROR\nDATABSE VUOTO O IRRAGIUNGIBILE\n");
@@ -56,6 +64,14 @@ int main(){
     fclose(Waitings);
     fclose(Utenti);
 
+    /********************************/
+
+
+
+
+
+    /* MENUING E OPERAZIONI I/O */
+
     while(quit){
         strcpy(user, FirstScreen(user, UserList_Head));
 
@@ -77,11 +93,11 @@ int main(){
                         Current_User->user.balance = Withdraw(Current_User->user.balance);
 
                         if(old_balance != Current_User->user.balance){
-                        printf("\n\n--- OPERAZIONE ESEGUITA CON SUCCESSO. NUOVO SALDO ----> %.2f ---\n", Current_User->user.balance);
-                        Rewrite_User_File(UserList_Head);
-                        printf("Che altra operazione si vuole effettuare? ");
-                        break;
-                    }
+                            printf("\n\n--- OPERAZIONE ESEGUITA CON SUCCESSO. NUOVO SALDO ----> %.2f ---\n", Current_User->user.balance);
+                            Rewrite_User_File(UserList_Head);
+                            printf("Che altra operazione si vuole effettuare? ");
+                            break;
+                        }
                     
                     case 1:
                         Current_User->user.balance = Load(Current_User->user.balance);
@@ -118,8 +134,25 @@ int main(){
             Rewrite_Clothes_File(Clothes);
             Rewrite_User_File(UserList_Head);
         } 
-    }  
+    } 
+
+    /****************************/ 
+
+
+
+    /* LIBERARE LE STRUTURE */
+
+    FreeTree(Clothes);
+    FreeList(UserList_Head);
+    FreeList(Waitings_Head);
+
+    return 0;
 }
+
+
+
+
+
 
 
 WaitingNode* SearchWaiting(User_Node* User, TreeNode* Clothes, WaitingNode* List){

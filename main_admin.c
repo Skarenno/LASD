@@ -23,7 +23,7 @@ int main(){
     bool quit = false;
 
     char conf_char;
-    unsigned short int op_choice;
+    int op_choice;
 
     FILE* Admins = fopen(AU_PATH, "r+");
     FILE* Capi = fopen (C_PATH, "r+");
@@ -100,8 +100,9 @@ int main(){
                 if(Clothes == NULL){
                     printf("\nATTENZIONE: ATTUALMENTE NON SONO PRESENTI CAPI\n");
             }
+            
             printf("Immettere azione: ");
-            scanf("%hu", &op_choice);
+            scanf("%d", &op_choice);
 
             
             }

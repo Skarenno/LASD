@@ -79,7 +79,6 @@ void Register( User_Node* Head){
     }
 }
     
-
 char* Accesso(char* username, User_Node* Head){
     char password[STRLEN];
     bool exit_check = false;
@@ -159,17 +158,11 @@ float GetBalance(char* user){
         fscanf(Utenti, "%f", &balance);
 
         if(strcmp(user, req_username) == 0)
+            fclose(Utenti);
             return balance;
     }
-
+    fclose(Utenti);
     return 0.0;
-}
-
-void PrintAdminOptions(){
-    printf("\n0. Modificare capi esistenti\n");
-    printf("1. Inserire un nuovo admin\n");
-    printf("2. Aggiungere nuovo capo\n");
-    printf("3. Uscire\n");
 }
 
 void PrintOptions(){
@@ -232,8 +225,6 @@ float Load (float balance){
     }
     return balance;
 }
-
-
 
 void  WelcomeScreen(User_Node* User){
     unsigned short int req_action;

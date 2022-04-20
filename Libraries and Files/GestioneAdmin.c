@@ -2,14 +2,15 @@
     #define STD_HEAD "standard_header.h"
     #include STD_HEAD
 #endif
-#ifndef STRUCTS 
-    #define STRUCTS "structs.c"
-    #include STRUCTS
-#endif
-#ifndef G_CAPI
-    #define G_CAPI "GestioneCapi.c"
-    #include G_CAPI
-#endif
+
+
+
+void PrintAdminOptions(){
+    printf("\n0. Modificare capi esistenti\n");
+    printf("1. Inserire un nuovo admin\n");
+    printf("2. Aggiungere nuovo capo\n");
+    printf("3. Uscire\n");
+}
 
 void Rewrite_Admin_File(User_Node* Head){
     User_Node* Cursor = Initialize_User_Node(Cursor);
@@ -89,7 +90,6 @@ TreeNode* ChangeSizes(TreeNode* Clothe, char size, int choice){
     return Clothe;
 }
 
-
 TreeNode* ChangeClothes(TreeNode* Clothes){
     char clothe[STRLEN];
     char size;
@@ -99,7 +99,7 @@ TreeNode* ChangeClothes(TreeNode* Clothes){
 
     TreeNode* Selected;
 
-    printf("\nInserire il nome del capo da rimuovere: ");
+    printf("\nInserire il nome del capo da modificare: ");
     scanf("%s", clothe);
     printf("SONO STATI TROVATI I SEGUENTI CAPI\n");
     FindClothes(Clothes, clothe);
@@ -153,7 +153,6 @@ TreeNode* ChangeClothes(TreeNode* Clothes){
 
     return Clothes;
 }
-
 
 TreeNode* AddClothe(TreeNode* Clothes){
     struct __capo clothe;

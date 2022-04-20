@@ -257,7 +257,6 @@ void Rewrite_Clothes_File(TreeNode* Clothes){
     return;
 }
 
-
 WaitingNode* BuyMenu(User_Node* User, TreeNode* Clothes, WaitingNode* List){
 
     char cat_choice[STRLEN];

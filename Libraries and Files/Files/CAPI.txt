@@ -1,9 +1,8 @@
-Felpa_Nike_Blu S:1  M:7 L:9    47.70
-Scarpe_Adidas   S:0 M:1 L:21   50.00
-Maglia_LaCoste S:6 M:23 L:91   120.98
-Felpa_Guess S:1 M:2 L:38       250.89
-Scarpe_NewBalance S:2 M:34 L:12 69.96
-Felpa_UnderArmor S:5 M:3 L:0    79.85
-Maglia_HardRock S:8 M:9 L:12    70.00
-Maglia_Acer S:12 M:10 L:24  60.90
-Maglia_Nike_Verde S:15 M:70 L:12    70.90
+Maglia_Acer S:12 M:10 L:24 60.900002
+Felpa_UnderArmor S:5 M:3 L:0 79.849998
+Felpa_Nike_Blu S:1 M:7 L:9 47.700001
+Felpa_Guess S:1 M:1 L:38 250.889999
+Scarpe_NewBalance S:2 M:34 L:12 69.959999
+Scarpe_Adidas S:0 M:1 L:21 50.000000
+Maglia_LaCoste S:6 M:23 L:91 120.980003
+Maglia_HardRock S:8 M:9 L:12 70.000000

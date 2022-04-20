@@ -9,6 +9,8 @@
 #endif
 
 
+/*********** STRUTTURE ************/
+
 struct __capo{
     char name[STRLEN];
     unsigned short int S, M, L;
@@ -21,6 +23,42 @@ typedef struct tr_node{
     struct tr_node *left, *right;
 }TreeNode;
 
+
+
+
+
+struct __user{
+    char username[STRLEN];
+    char password[STRLEN];
+    float balance;
+};
+
+typedef struct user_node{
+    struct __user user;
+    struct user_node* next;
+}User_Node;
+
+
+
+
+
+struct __waiter{
+    char name[STRLEN];
+    char clothe[STRLEN];
+    char size;
+};
+
+typedef struct waiting_l{
+    struct __waiter waiter;
+    struct waiting_l* next;
+}WaitingNode;
+
+/*********************************/
+
+
+
+
+/************* VARIE ************/
 
 bool IsUsable(FILE* file){
     int size;
@@ -53,6 +91,13 @@ void StringSort(struct __capo *array, int length){
         array[j + 1] = tmp;
     }
 }
+
+/********************************/
+
+
+
+/************* CAPI - ALBERO ************/
+
 
 
 TreeNode* Initialize_Tree_Node(TreeNode* Node){
@@ -157,7 +202,6 @@ TreeNode* WriteTree(TreeNode* Root, struct __capo* capi, int index){
     return Root;
 }
 
-
 void PrintInOrder(TreeNode* Root){
     if(Root != NULL){
         PrintInOrder(Root->left);
@@ -168,19 +212,23 @@ void PrintInOrder(TreeNode* Root){
     return;
 }
 
+void FreeTree(TreeNode* Root){
+    if(Root == NULL)
+        return;
+
+    FreeTree(Root->left);
+    FreeTree(Root->right);
+    free(Root);
+}
+
+/****************************************/
 
 
 
-struct __user{
-    char username[STRLEN];
-    char password[STRLEN];
-    float balance;
-};
 
-typedef struct user_node{
-    struct __user user;
-    struct user_node* next;
-}User_Node;
+/************* UTENTI - LISTE ************/
+
+
 
 User_Node* Initialize_User_Node(User_Node* Node){
     Node = (User_Node*)malloc(sizeof(User_Node));
@@ -220,20 +268,20 @@ User_Node* InsertNode(User_Node* Head, User_Node* NewNode){
     return NewNode;
 }
 
+void FreeList(User_Node* Head){
+    if(Head!= NULL){
+        FreeList(Head->next);
+        free(Head);     
+    }
+}
+
+/*****************************************/
 
 
 
-struct __waiter{
-    char name[STRLEN];
-    char clothe[STRLEN];
-    char size;
-};
 
-typedef struct waiting_l{
-    struct __waiter waiter;
-    struct waiting_l* next;
-}WaitingNode;
 
+/************* WAITINGS ************/
 
 WaitingNode* Initialize_Waiting_Node(WaitingNode* Node){
     Node = (WaitingNode*)malloc(sizeof(WaitingNode));
@@ -242,3 +290,4 @@ WaitingNode* Initialize_Waiting_Node(WaitingNode* Node){
     return Node;
 }
 
+/***********************************/
