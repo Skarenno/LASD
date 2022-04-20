@@ -14,7 +14,10 @@
     #define STRUCTS "structs.c"
     #include STRUCTS
 #endif
-
+#ifndef G_ADMIN
+    #define G_ADMIN "GestioneAdmin.c"
+    #include G_ADMIN
+#endif
 
 
 void RegistraUtente();

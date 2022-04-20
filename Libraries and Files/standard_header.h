@@ -16,7 +16,7 @@
 #define U_PATH  "./Libraries and Files/Files/UTENTI.txt"
 #define C_PATH  "./Libraries and Files/Files/CAPI.txt"
 #define W_PATH  "./Libraries and Files/Files/WAITING.txt"
-
+#define AU_PATH "./Libraries and Files/Files/ADMIN.txt"
 
 const char* categories[N_CATEGORIES] = {"Maglia", "Felpa", "Scarpe"};
 

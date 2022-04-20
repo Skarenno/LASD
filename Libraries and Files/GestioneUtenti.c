@@ -166,6 +166,12 @@ float GetBalance(char* user){
     return 0.0;
 }
 
+void PrintAdminOptions(){
+    printf("\n0. Rimuovere capi\n");
+    printf("1. Aggiungere capi\n");
+    printf("2. Inserire un nuovo admin\n");
+}
+
 void PrintOptions(){
     printf("\n0. Prelevare denaro\n");
     printf("1. Aggiungere credito al conto virtuale\n");

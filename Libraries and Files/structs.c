@@ -74,8 +74,6 @@ TreeNode* WriteLeaf(TreeNode* leaf, struct __capo capo){
     return leaf;
 }
 
-
-
 TreeNode* InsertLeaf (TreeNode* Root, struct __capo capo){
     if(Root == NULL){
         Root = Initialize_Tree_Node(Root);
@@ -93,6 +91,47 @@ TreeNode* InsertLeaf (TreeNode* Root, struct __capo capo){
     return Root;
 }
 
+TreeNode* MinimumValue(TreeNode* Leaf){
+    TreeNode* temp = Initialize_Tree_Node(temp);
+
+    while(temp != NULL && temp->left != NULL){
+        temp = temp->left;
+    }
+
+    return temp;
+}
+
+TreeNode* DeleteLeaf (TreeNode* Root, struct __capo capo){
+    if(Root == NULL)
+        return Root;
+
+    TreeNode* temp = Initialize_Tree_Node(temp);
+
+    if(strcmp(Root->capo.name, capo.name) >= 0){
+        Root->left = DeleteLeaf(Root->left, capo);
+    }
+    else if (strcmp(Root->capo.name, capo.name) < 0){
+        Root->right = DeleteLeaf(Root->right, capo);
+    }
+
+    else{
+        if(Root->left == NULL){
+            temp = Root->right;
+            free(Root);
+            return temp;
+        }
+        else if(Root->right == NULL){        
+            temp = Root->left;
+            free(Root);
+            return temp;
+        }
+
+        temp = MinimumValue(Root->right);
+        WriteLeaf(Root, temp->capo);
+        Root->right = DeleteLeaf(Root->right, temp->capo);
+    }
+    return Root;
+}
 
 TreeNode* WriteTree(TreeNode* Root, struct __capo* capi, int index){
     if(index == 0)

@@ -41,7 +41,7 @@ int main(){
     UserList_Head = Read_User_List(Utenti, UserList_Head);
 
     Clothes = Initialize_Tree_Node(Clothes);
-    Clothes = OrganizeClothes(Clothes, Capi);
+    Clothes = Read_Clothes_File(Clothes, Capi);
 
     Waitings_Head = Initialize_Waiting_Node(Waitings_Head);
     Waitings_Head = Read_Waiting_List(Waitings, Waitings_Head);

@@ -49,7 +49,7 @@ struct __capo* LoadCapo(FILE* file, struct __capo* array, int arr_index, char* n
     return array;
 }
 
-TreeNode* OrganizeClothes(TreeNode* Clothes, FILE* Capi){
+TreeNode* Read_Clothes_File(TreeNode* Clothes, FILE* Capi){
 
     struct __capo *arr_capi = (struct __capo*)calloc(ARRLEN, sizeof(struct __capo));
     int index = 0;
@@ -288,7 +288,7 @@ WaitingNode* BuyMenu(User_Node* User, TreeNode* Clothes, WaitingNode* List){
             if(isdigit(cod_merch)){
             printf("--VALORE ERRATO---");
             return List;
-        }
+            }
 
         if(cod_merch == -1)
             break;
