@@ -7,10 +7,12 @@
     #define G_WAITING "GestioneWaiting.c"
     #include G_WAITING
 #endif
+
 #ifndef STRUCTS 
     #define STRUCTS "structs.c"
     #include STRUCTS
 #endif
+
 struct __capo* LoadCapo(FILE* file, struct __capo* array, int arr_index, char* name){
     char tok[2] = ":";
     char* str_token;

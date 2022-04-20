@@ -1,9 +1,10 @@
 #ifndef MAIN_H
-    #define MAIN_H "mainheader.h"
+    #define MAIN_H "./Libraries and Files/mainheader.h"
     #include MAIN_H
 #endif
+
 #ifndef STD_HEAD
-    #define STD_HEAD "standard_header.h"
+    #define STD_HEAD "./Libraries and Files/standard_header.h"
     #include STD_HEAD
 #endif
 
