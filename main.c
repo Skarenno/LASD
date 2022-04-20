@@ -12,6 +12,7 @@ int main(){
     char user[STRLEN];
     char choice;
     unsigned short int op_choice;
+    float old_balance;
     bool quit = true;
     bool disconnect = false;
 
@@ -40,41 +41,67 @@ int main(){
     fclose(Waitings);
 
     while(quit){
-        Utenti = Rewrite_User_File(UserList_Head);
         strcpy(user, FirstScreen(user, UserList_Head));
-        
+        Utenti = Rewrite_User_File(UserList_Head);
+
         Current_User = Initialize_User_Node(Current_User);
         Current_User = FindUser(user, UserList_Head);
         
-        op_choice = WelcomeScreen(Current_User, Waitings_Head);
+        WelcomeScreen(Current_User, Waitings_Head);
+        disconnect = false;
 
         while (!disconnect){
-        
-            switch(op_choice){
-                case 2:
-                    Waitings_Head = SearchWaiting(Current_User, Clothes, Waitings_Head);
-                    Waitings_Head = BuyMenu(Current_User, Clothes, Waitings_Head);
-                    Waitings = Rewrite_Waiting_File(Waitings_Head);
-                    Utenti = Rewrite_User_File(UserList_Head);
+            PrintOptions();
+            fflush(stdin);
+            scanf("%hu", &op_choice);
+            if(isdigit(op_choice) == 0){
+                switch(op_choice){
 
-                    printf("Si vuole eseguire altre operazioni? (y/n): ");
-                    scanf(" %c", &choice);
-                    if(choice == 'n')  
+                    case 0:
+                        old_balance = Current_User->user.balance;
+                        Current_User->user.balance = Withdraw(Current_User->user.balance);
+
+                        if(old_balance != Current_User->user.balance){
+                        printf("\n\n--- OPERAZIONE ESEGUITA CON SUCCESSO. NUOVO SALDO ----> %.2f ---\n", Current_User->user.balance);
+                        printf("Che altra operazione si vuole effettuare? ");
+                        break;
+                    }
+                    
+                    case 1:
+                        Current_User->user.balance = Load(Current_User->user.balance);
+                        printf("\n\n--- OPERAZIONE ESEGUITA CON SUCCESSO. NUOVO CREDITO ----> %.2f\n", Current_User->user.balance);
+                        printf("Che altra operazione si vuole effettuare?");
+                        break;
+
+                    case 2:
+                        Waitings_Head = SearchWaiting(Current_User, Clothes, Waitings_Head);
+                        Waitings_Head = BuyMenu(Current_User, Clothes, Waitings_Head);
+                        Rewrite_Clothes_File(Clothes);
+                        Waitings = Rewrite_Waiting_File(Waitings_Head);
+                        Utenti = Rewrite_User_File(UserList_Head);
+
+                        printf("Si vuole eseguire altre operazioni? (y/n): ");
+                        scanf(" %c", &choice);
+                        if(choice == 'n')  
+                            disconnect = true;
+                        break;
+
+                    case 3:
+                        user[0] = '\0';
                         disconnect = true;
-                        
-                    break;
-
-                case 3:
-                    user[0] = '\0';
-                    printf("\n\n***DISCONNESSIONE UTENTE***\n");
-                    printf("***************************\n\n");
-                    sleep(2);
-                    break;
+                        printf("\n\n***DISCONNESSIONE UTENTE***\n");
+                        printf("***************************\n\n");
+                        sleep(1);
+                        break;
+                }
             }
-        }
-    }
-    Rewrite_Clothes_File(Clothes);
-    Utenti = Rewrite_User_File(UserList_Head);
+            else{
+                printf("Operazione non valida. Selezionare nuova operazione");
+            }
+            Rewrite_Clothes_File(Clothes);
+            Utenti = Rewrite_User_File(UserList_Head);
+        } 
+    }  
 }
 
 

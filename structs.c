@@ -141,6 +141,7 @@ typedef struct user_node{
 
 User_Node* Initialize_User_Node(User_Node* Node){
     Node = (User_Node*)malloc(sizeof(User_Node));
+    Node->user.username[0] = '\0';
     Node->next = NULL;
 
     return Node;

@@ -3,6 +3,10 @@
     #include STD_HEAD
 #endif
 
+#ifndef STRUCTS 
+    #define STRUCTS "structs.c"
+    #include STRUCTS
+#endif
 
 WaitingNode* Read_Waiting_List(FILE* file, WaitingNode* Head){
     if(Head->next == NULL)
@@ -80,3 +84,4 @@ WaitingNode* AddWaiting(WaitingNode* List, char* name, char* clothe_name, char s
 
     return Cur;
 }
+

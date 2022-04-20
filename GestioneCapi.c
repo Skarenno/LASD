@@ -7,7 +7,10 @@
     #define G_WAITING "GestioneWaiting.c"
     #include G_WAITING
 #endif
-
+#ifndef STRUCTS 
+    #define STRUCTS "structs.c"
+    #include STRUCTS
+#endif
 struct __capo* LoadCapo(FILE* file, struct __capo* array, int arr_index, char* name){
     char tok[2] = ":";
     char* str_token;
@@ -122,7 +125,8 @@ WaitingNode* IsInStock(TreeNode* Clothes, WaitingNode* List, WaitingNode* Waited
                 default:
                     break;
             }
-
+            sleep(1);
+            
             if(is_stocked)
                 List = RemoveWaiting(List, Waited);
         }
@@ -171,7 +175,7 @@ WaitingNode* Buy(User_Node* User, TreeNode* Merch, WaitingNode* List){
                 }
                 else{
                     if(User->user.balance > Merch->capo.price){
-                        User->user.balance <= Merch->capo.price;
+                        User->user.balance -= Merch->capo.price;
                         Merch->capo.S -= 1;
                         correct = true;
                         printf("\n--- ACQUISTO EFFETTUATO CON SUCCESSO ---");
@@ -189,7 +193,7 @@ WaitingNode* Buy(User_Node* User, TreeNode* Merch, WaitingNode* List){
                 }
                 else{
                     if(User->user.balance > Merch->capo.price){
-                        User->user.balance <= Merch->capo.price;
+                        User->user.balance -= Merch->capo.price;
                         Merch->capo.M -= 1;
                         correct = true;
                         printf("\n--- ACQUISTO EFFETTUATO CON SUCCESSO ---");
@@ -208,7 +212,7 @@ WaitingNode* Buy(User_Node* User, TreeNode* Merch, WaitingNode* List){
                 }
                 else{
                     if(User->user.balance > Merch->capo.price){
-                        User->user.balance <= Merch->capo.price;
+                        User->user.balance -= Merch->capo.price;
                         Merch->capo.L -= 1;
                         printf("\n--- ACQUISTO EFFETTUATO CON SUCCESSO ---");
                     }
@@ -267,7 +271,8 @@ WaitingNode* BuyMenu(User_Node* User, TreeNode* Clothes, WaitingNode* List){
     bool quit = false;
 
     while(!quit){
-        printf("\n\nChe categoria di capo si vuole visualizzare?\n");
+        printf("\nSALDO ATTUALE: %f", User->user.balance);
+        printf("\nChe categoria di capo si vuole visualizzare?\n");
 
         for(int i = 0; i < N_CATEGORIES; i++)
             printf("%s/", categories[i]);
@@ -282,27 +287,33 @@ WaitingNode* BuyMenu(User_Node* User, TreeNode* Clothes, WaitingNode* List){
         FindClothes(Clothes, cat_choice);
         printf(" --------------\n\n");
 
-        while(true){
-            printf("Imettere il codice dell'articolo da acquistare (-1 per cambiare categoria): ");
-            scanf("%d", &cod_merch);
+    
+        printf("Imettere il codice dell'articolo da acquistare (-1 per cambiare categoria): ");
+        scanf("%d", &cod_merch);
 
-            if(cod_merch == -1)
-                break;
-
-            TreeNode* SelectedClothe = Initialize_Tree_Node(SelectedClothe);
-            SelectedClothe = SelectMerch(Clothes, cod_merch);
-
-            if(User->user.balance < SelectedClothe->capo.price){
-                printf("Non si dispone di abbastanza denaro\n");
-                return List;
-            }
-
-            if(SelectedClothe != NULL){
-                List = Buy(User, SelectedClothe, List);
-            }
-
-            Rewrite_Clothes_File(Clothes);
+            if(isdigit(cod_merch)){
+            printf("--VALORE ERRATO---");
+            return List;
         }
+
+        if(cod_merch == -1)
+            break;
+
+        
+
+        TreeNode* SelectedClothe = Initialize_Tree_Node(SelectedClothe);
+        SelectedClothe = SelectMerch(Clothes, cod_merch);
+
+        if(User->user.balance < SelectedClothe->capo.price){
+            printf("Non si dispone di abbastanza denaro\n");
+            return List;
+        }
+
+        if(SelectedClothe != NULL){
+            List = Buy(User, SelectedClothe, List);
+        }
+
+        Rewrite_Clothes_File(Clothes);
     }
-    return List;
 }
+    

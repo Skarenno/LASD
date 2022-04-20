@@ -117,7 +117,6 @@ char* Accesso(char* username, User_Node* Head){
         exit_check = true;
         switch(verification_code){
             case 0:
-                printf("---T'APPOOOOOO---\n\n");
                 break;
 
             case 1:
@@ -147,7 +146,7 @@ char* FirstScreen(char* user, User_Node* Head){
 
     while(true){
 
-        printf("Selezionare azione (1. Accesso, 2. Registrazione): ");
+        printf("Selezionare azione (1. Accesso, 2. Registrazione, 3. Chiusura programma): ");
         scanf("%hu", &r_action);
 
         if(r_action == 1){
@@ -159,6 +158,11 @@ char* FirstScreen(char* user, User_Node* Head){
         }
         if(r_action == 2)
             RegistraUtente(Head);
+
+        if(r_action == 3)
+            exit(EXIT_SUCCESS);
+
+        printf("Valore non valido\n");
     }
 
 }
@@ -197,7 +201,7 @@ float Withdraw(float balance){
         return balance;
     }
 
-    printf("Quanto si desidera prelevare? ");
+    printf("Quanto si desidera prelevare? (Saldo attuale: %.2f) ", balance);
     scanf("%f", &op_balance);
 
     if(op_balance > balance){
@@ -243,10 +247,9 @@ float Load (float balance){
 
 
 
-unsigned short int  WelcomeScreen(User_Node* User, WaitingNode* List){
+void  WelcomeScreen(User_Node* User, WaitingNode* List){
     unsigned short int req_action;
-    float old_balance;
-    bool exit = false;
+    
 
 
     printf("\n*************\n");
@@ -258,54 +261,6 @@ unsigned short int  WelcomeScreen(User_Node* User, WaitingNode* List){
 
     printf("---||Hai effettutato l'accesso come \"%s\", il tuo saldo equivale a %.2f||---\n\n", User->user.username, User->user.balance);
     printf("Si possono eseguire le seguenti operazioni: ");
-    PrintOptions();
-
-
-    while(!exit){
-        scanf("%hu", &req_action);
-
-        switch(req_action){
-            // PRELEVARE
-            case 0:
-                old_balance = User->user.balance;
-                User->user.balance = Withdraw(User->user.balance);
-                
-                if(old_balance != User->user.balance){
-                    printf("\n\n--- OPERAZIONE ESEGUITA CON SUCCESSO. NUOVO SALDO ----> %.2f ---\n", User->user.balance);
-                    printf("Che altra operazione si vuole effettuare? ");
-                    PrintOptions();
-                    break;
-                }
-                
-                PrintOptions();
-                break;
-
-            // AGGIUNGERE CREDITO
-            case 1:
-                User->user.balance = Load(User->user.balance);
-                printf("\n\n--- OPERAZIONE ESEGUITA CON SUCCESSO. NUOVO CREDITO ----> %.2f\n", User->user.balance);
-                printf("Che altra operazione si vuole effettuare? ");
-                PrintOptions();
-                break;
-
-            // ACQUISTARE
-            case 2:
-                return 2;
-
-            // USCIRE
-
-            case 3:
-                return 3;
-
-            // OPZIONE NON VALIDA
-            
-            default:
-                printf("--- Opzione non valida. Si prega di riprovare ---\n");
-                PrintOptions();
-                break;
-        }           
-
-    }
 }
 
 User_Node* Read_User_List (FILE* file, User_Node* Head){
