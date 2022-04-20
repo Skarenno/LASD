@@ -107,14 +107,18 @@ TreeNode* DeleteLeaf (TreeNode* Root, struct __capo capo){
 
     TreeNode* temp = Initialize_Tree_Node(temp);
 
-    if(strcmp(Root->capo.name, capo.name) >= 0){
+    if(strcmp(Root->capo.name, capo.name) > 0)
         Root->left = DeleteLeaf(Root->left, capo);
-    }
-    else if (strcmp(Root->capo.name, capo.name) < 0){
+    
+    else if (strcmp(Root->capo.name, capo.name) < 0)
         Root->right = DeleteLeaf(Root->right, capo);
-    }
 
     else{
+        if(Root->left == NULL && Root->right == NULL){
+            free(Root);
+            return NULL;
+        }
+
         if(Root->left == NULL){
             temp = Root->right;
             free(Root);
@@ -127,7 +131,7 @@ TreeNode* DeleteLeaf (TreeNode* Root, struct __capo capo){
         }
 
         temp = MinimumValue(Root->right);
-        WriteLeaf(Root, temp->capo);
+        Root = WriteLeaf(Root, temp->capo);
         Root->right = DeleteLeaf(Root->right, temp->capo);
     }
     return Root;
@@ -235,5 +239,6 @@ WaitingNode* Initialize_Waiting_Node(WaitingNode* Node){
     Node = (WaitingNode*)malloc(sizeof(WaitingNode));
     Node->waiter.name[0] = '\0';
     Node->next = NULL;
+    return Node;
 }
 

@@ -38,7 +38,7 @@ int VerificaPassword(User_Node* Head, char* username, char* password){
     return 2;
  }
 
-void RegistraUtente( User_Node* Head){
+void Register( User_Node* Head){
     User_Node* Cursor = Initialize_User_Node(Cursor);
 
     bool registered;
@@ -73,7 +73,6 @@ void RegistraUtente( User_Node* Head){
             scanf("%s", Cursor->user.password);
 
             strcpy(Cursor->user.username, n_username);
-            Rewrite_User_File(Head);
             printf("---UTENTE REGISTRATO CON SUCCESSO---\n");
             return;
         }
@@ -111,7 +110,7 @@ char* Accesso(char* username, User_Node* Head){
                 scanf(" %c", &req_c);
 
                 if(req_c == 'y')
-                    RegistraUtente(Head);
+                    Register(Head);
                 if(req_c == 'n'){
                     printf("---RITORNO AL MENÚ INIZIALE---\n\n");
                 }
@@ -137,7 +136,7 @@ char* FirstScreen(char* user, User_Node* Head){
                 return user;;
         }
         else if(r_action == 2){
-            RegistraUtente(Head);
+            Register(Head);
             Rewrite_User_File(Head);
         }
         else if(r_action == 3)
@@ -167,9 +166,10 @@ float GetBalance(char* user){
 }
 
 void PrintAdminOptions(){
-    printf("\n0. Rimuovere capi\n");
-    printf("1. Aggiungere capi\n");
-    printf("2. Inserire un nuovo admin\n");
+    printf("\n0. Modificare capi esistenti\n");
+    printf("1. Inserire un nuovo admin\n");
+    printf("2. Aggiungere nuovo capo\n");
+    printf("3. Uscire\n");
 }
 
 void PrintOptions(){
@@ -230,6 +230,7 @@ float Load (float balance){
             return balance;
         }
     }
+    return balance;
 }
 
 

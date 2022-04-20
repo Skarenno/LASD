@@ -26,7 +26,13 @@ int main(){
     WaitingNode* Waitings_Head;
 
     if(!IsUsable(Utenti)){
-        printf("\nUSER DATABASE ERROR, EXITING!!");
+        printf("\nUSER DATABASE ERROR\nDATABSE VUOTO O IRRAGIUNGIBILE\n");
+        if(!feof(Utenti)){
+            fprintf(Utenti, "user password 0.0");
+            printf("AGGIUNTA \"user\" e \"password\"");
+            sleep(1);
+        }
+        printf("\nEXITING\n");
         sleep(2);
         exit(EXIT_FAILURE);
     }
