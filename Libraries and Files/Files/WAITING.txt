@@ -1,2 +1,5 @@
-mamma Felpa_Guess M
-Antonella Scarpe_Adidas S
+user Scarpe_Adidas M
+Antonella Scarpe_NewBalance S
+Mirko Scarpe_Adidas M
+user Maglia_LaCoste S
+user Felpa_Guess M

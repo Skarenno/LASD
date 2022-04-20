@@ -11,9 +11,12 @@
 #define N_TAGLIE 3
 #define STRLEN 100
 #define ARRLEN 200
-#define U_PATH "./Files/UTENTI.txt"
-#define C_PATH "./Files/CAPI.txt"
-#define W_PATH "./Files/WAITING.txt"
+
+
+#define U_PATH  "./Libraries and Files/Files/UTENTI.txt"
+#define C_PATH  "./Libraries and Files/Files/CAPI.txt"
+#define W_PATH  "./Libraries and Files/Files/WAITING.txt"
+
 
 const char* categories[N_CATEGORIES] = {"Maglia", "Felpa", "Scarpe"};
 

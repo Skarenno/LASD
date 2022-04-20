@@ -49,14 +49,7 @@ struct __capo* LoadCapo(FILE* file, struct __capo* array, int arr_index, char* n
     return array;
 }
 
-TreeNode* OrganizeClothes(TreeNode* Clothes){
-    FILE* Capi = fopen(C_PATH, "r");
-
-    if(!IsUsable(Capi)){
-        printf("\nCLOTHES DATABASE ERROR, EXITING!!\n");
-        sleep(2);
-        exit(EXIT_FAILURE);
-    }
+TreeNode* OrganizeClothes(TreeNode* Clothes, FILE* Capi){
 
     struct __capo *arr_capi = (struct __capo*)calloc(ARRLEN, sizeof(struct __capo));
     int index = 0;
@@ -73,7 +66,6 @@ TreeNode* OrganizeClothes(TreeNode* Clothes){
     Clothes = NULL;
     Clothes = WriteTree(Clothes, arr_capi, index);
   
-    fclose(Capi);
     return Clothes;
 }
 
@@ -190,8 +182,8 @@ WaitingNode* Buy(User_Node* User, TreeNode* Merch, WaitingNode* List){
                     printf("----TAGLIA NON DISPONIBILE---");
                     printf("\nAggiungo il capo alla lista d'attesa\n");
                     sleep(1);
-                    return List;
                     List = AddWaiting(List, User->user.username, Merch->capo.name, 'M');
+                    return List;
                 }
                 else{
                     if(User->user.balance > Merch->capo.price){

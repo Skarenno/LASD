@@ -16,10 +16,10 @@
 #endif
 
 
+
 void RegistraUtente();
-int VerificaPassword(char* username, char* password);
+int VerificaPassword(User_Node* Head, char* username, char* password);
 char* Accesso(char* username, User_Node* Head);
 char* FirstScreen(char* user, User_Node* Head);
-FILE* Rewrite_User_File(User_Node* Head);
 
 WaitingNode* SearchWaiting(User_Node* User, TreeNode* Clothes, WaitingNode* List);

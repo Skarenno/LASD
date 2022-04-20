@@ -24,7 +24,7 @@ WaitingNode* Read_Waiting_List(FILE* file, WaitingNode* Head){
     return Head;     
 }
 
-FILE* Rewrite_Waiting_File(WaitingNode* Head){
+void Rewrite_Waiting_File(WaitingNode* Head){
     WaitingNode* Cursor = Initialize_Waiting_Node(Cursor);
     Cursor = Head;
 
@@ -35,9 +35,6 @@ FILE* Rewrite_Waiting_File(WaitingNode* Head){
             fprintf(file, "%s %s %c\n", Cursor->waiter.name, Cursor->waiter.clothe, Cursor->waiter.size);
             Cursor = Cursor->next;
     }
-
-    fseek(file, 0, SEEK_SET);
-    return file;
 }
 
 WaitingNode* RemoveWaiting(WaitingNode* Head, WaitingNode* Node){

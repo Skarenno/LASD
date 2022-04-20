@@ -2,8 +2,8 @@ Maglia_HardRock S:8 M:9 L:12 70.000000
 Maglia_Acer S:12 M:10 L:24 60.900002
 Felpa_UnderArmor S:4 M:2 L:0 79.849998
 Felpa_Nike_Blu S:0 M:7 L:7 47.700001
-Felpa_Guess S:1 M:2 L:38 250.889999
-Scarpe_NewBalance S:0 M:34 L:12 69.959999
+Felpa_Guess S:1 M:0 L:38 250.889999
+Scarpe_NewBalance S:1 M:34 L:11 69.959999
 Scarpe_Adidas S:2 M:0 L:20 50.000000
 Maglia_Nike_Verde S:15 M:69 L:12 70.900002
-Maglia_LaCoste S:6 M:23 L:91 120.980003
+Maglia_LaCoste S:0 M:23 L:91 120.980003

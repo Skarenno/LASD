@@ -19,8 +19,9 @@ int main(){
 
     FILE* Utenti = fopen(U_PATH, "r+");
     FILE* Waitings = fopen(W_PATH, "r+");
+    FILE* Capi = fopen(C_PATH, "r+");
 
-    User_Node* UserList_Head, *WaitingList, *Current_User;
+    User_Node* UserList_Head, *Current_User;
     TreeNode* Clothes;
     WaitingNode* Waitings_Head;
 
@@ -29,26 +30,33 @@ int main(){
         sleep(2);
         exit(EXIT_FAILURE);
     }
+
+    if(!IsUsable(Capi)){
+        printf("\nCLOTHES DATABASE ERROR, EXITING!!\n");
+        sleep(2);
+        exit(EXIT_FAILURE);
+    }
+
     UserList_Head = Initialize_User_Node(UserList_Head);
     UserList_Head = Read_User_List(Utenti, UserList_Head);
 
-
     Clothes = Initialize_Tree_Node(Clothes);
-    Clothes = OrganizeClothes(Clothes);
+    Clothes = OrganizeClothes(Clothes, Capi);
 
     Waitings_Head = Initialize_Waiting_Node(Waitings_Head);
     Waitings_Head = Read_Waiting_List(Waitings, Waitings_Head);
 
+    fclose(Capi);
     fclose(Waitings);
+    fclose(Utenti);
 
     while(quit){
         strcpy(user, FirstScreen(user, UserList_Head));
-        Utenti = Rewrite_User_File(UserList_Head);
 
         Current_User = Initialize_User_Node(Current_User);
         Current_User = FindUser(user, UserList_Head);
         
-        WelcomeScreen(Current_User, Waitings_Head);
+        WelcomeScreen(Current_User);
         disconnect = false;
 
         while (!disconnect){
@@ -64,13 +72,15 @@ int main(){
 
                         if(old_balance != Current_User->user.balance){
                         printf("\n\n--- OPERAZIONE ESEGUITA CON SUCCESSO. NUOVO SALDO ----> %.2f ---\n", Current_User->user.balance);
+                        Rewrite_User_File(UserList_Head);
                         printf("Che altra operazione si vuole effettuare? ");
                         break;
                     }
                     
                     case 1:
                         Current_User->user.balance = Load(Current_User->user.balance);
-                        printf("\n\n--- OPERAZIONE ESEGUITA CON SUCCESSO. NUOVO CREDITO ----> %.2f\n", Current_User->user.balance);
+                        printf("\n\n--- OPERAZIONE ESEGUITA CON SUCCESSO. NUOVO SALDO ----> %.2f\n", Current_User->user.balance);
+                        Rewrite_User_File(UserList_Head);
                         printf("Che altra operazione si vuole effettuare?");
                         break;
 
@@ -78,8 +88,8 @@ int main(){
                         Waitings_Head = SearchWaiting(Current_User, Clothes, Waitings_Head);
                         Waitings_Head = BuyMenu(Current_User, Clothes, Waitings_Head);
                         Rewrite_Clothes_File(Clothes);
-                        Waitings = Rewrite_Waiting_File(Waitings_Head);
-                        Utenti = Rewrite_User_File(UserList_Head);
+                        Rewrite_Waiting_File(Waitings_Head);
+                        Rewrite_User_File(UserList_Head);
 
                         printf("Si vuole eseguire altre operazioni? (y/n): ");
                         scanf(" %c", &choice);
@@ -100,7 +110,7 @@ int main(){
                 printf("Operazione non valida. Selezionare nuova operazione");
             }
             Rewrite_Clothes_File(Clothes);
-            Utenti = Rewrite_User_File(UserList_Head);
+            Rewrite_User_File(UserList_Head);
         } 
     }  
 }

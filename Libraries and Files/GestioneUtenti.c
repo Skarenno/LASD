@@ -3,55 +3,38 @@
     #include STD_HEAD
 #endif
 
-FILE* Rewrite_User_File(User_Node* Head){
+void Rewrite_User_File(User_Node* Head){
     User_Node* Cursor = Initialize_User_Node(Cursor);
     Cursor = Head;
 
     FILE* file = fopen(U_PATH, "w+");
-
+    if(!file){
+        printf("AOO");
+        exit(EXIT_FAILURE);
+    }
     while(Cursor){
         if(Cursor->user.username[0] != '\0')
             fprintf(file, "%s %s %.2f\n", Cursor->user.username, Cursor->user.password, Cursor->user.balance);
             Cursor = Cursor->next;
     }
 
-    fseek(file, 0, SEEK_SET);
-    return file;
+    fclose(file);
 }
 
-int VerificaPassword(char* username, char* password){
+int VerificaPassword(User_Node* Head, char* username, char* password){
+        User_Node* Cursor = Initialize_User_Node(Cursor);
+        Cursor = Head;
 
-    FILE* Utenti = fopen(U_PATH, "r+");
-    if(!Utenti){
-        printf("Impossibile accedere al \"database Utenti\"\n");
-        exit(EXIT_FAILURE);
-    }
-
-    printf("INSERITI: %s - %s\n", username, password);
-    char* req_username = (char*)calloc(sizeof(char), STRLEN);
-    char* req_password = (char*)calloc(sizeof(char), STRLEN);
-    float buff_saldo;
-
-    while(fscanf(Utenti, "%s", req_username) != EOF){
-        fscanf(Utenti, "%s", req_password);  
-        fscanf(Utenti, "%f", &buff_saldo);
-        printf("trying: %s - %s\n", req_username, req_password); 
-        
-        if(strcmp(username, req_username) == 0){
-            if(strcmp(password, req_password) == 0){
-                // USERNAME E PASSWORD CORRETTI
-                fclose(Utenti);
-                return 0;
+        while(Cursor){
+            if(strcmp(Cursor->user.username, username) == 0 ){
+                if(strcmp(Cursor->user.password, password) == 0)
+                    return 0;
+                else
+                    return 1;
             }
-            else{
-                // PASSWORD ERRATA
-                fclose(Utenti);
-                return 1;
-            }
+            Cursor = Cursor->next;
         }
-        //UTENTE NON PRESENTE
-    }
-    fclose(Utenti);
+
     return 2;
  }
 
@@ -90,8 +73,7 @@ void RegistraUtente( User_Node* Head){
             scanf("%s", Cursor->user.password);
 
             strcpy(Cursor->user.username, n_username);
-            FILE* Utenti = Rewrite_User_File(Head);
-            fclose(Utenti);
+            Rewrite_User_File(Head);
             printf("---UTENTE REGISTRATO CON SUCCESSO---\n");
             return;
         }
@@ -112,7 +94,7 @@ char* Accesso(char* username, User_Node* Head){
         printf("Inserire password: ");
         scanf("%s", password);
         printf("\n");
-        int verification_code = VerificaPassword(username, password);
+        int verification_code = VerificaPassword(Head, username, password);
 
         exit_check = true;
         switch(verification_code){
@@ -153,16 +135,15 @@ char* FirstScreen(char* user, User_Node* Head){
             strcpy(user, Accesso(user, Head));
             if(user[0] != '\0')
                 return user;;
-            
-            
         }
-        if(r_action == 2)
+        else if(r_action == 2){
             RegistraUtente(Head);
-
-        if(r_action == 3)
+            Rewrite_User_File(Head);
+        }
+        else if(r_action == 3)
             exit(EXIT_SUCCESS);
-
-        printf("Valore non valido\n");
+        else
+            printf("Valore non valido\n");
     }
 
 }
@@ -247,7 +228,7 @@ float Load (float balance){
 
 
 
-void  WelcomeScreen(User_Node* User, WaitingNode* List){
+void  WelcomeScreen(User_Node* User){
     unsigned short int req_action;
     
 
